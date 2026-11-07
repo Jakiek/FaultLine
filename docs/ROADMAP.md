@@ -29,6 +29,8 @@ Total ±10,5 jam.
 
 ## Fase 0 — Persiapan (30 menit)
 
+Status: venv, `requirements.txt` berversi tetap, `.env` diabaikan git, repo lokal. Neon dan repo GitHub publik belum dibuat; pengembangan memakai PostgreSQL lokal.
+
 - Repo `faultline` (public), salin `PROJECTBRIEF.md`, `.gitignore`, `docs/`. **Pastikan `.gitignore` ada sebelum commit pertama.**
 - `python -m venv .venv`, `requirements.txt`: `requests`, `psycopg[binary]`, `python-dotenv`, `pandas`, `streamlit`, `plotly`, `pytest`.
 - Project Neon baru → `DATABASE_URL` di `.env` (masuk `.gitignore`).
@@ -38,6 +40,8 @@ Total ±10,5 jam.
 ---
 
 ## Fase 1 — Skema (1 jam)
+
+Status: selesai di PostgreSQL lokal (`dim_tanggal` 5.479 baris, `dim_wilayah` 8 baris). Runner migrasi mencatat file di `skema_migrasi` sehingga `init` aman diulang. Belum dijalankan di Neon.
 
 - `sql/001_skema.sql`, `sql/002_dim_tanggal.sql` (generate 2016-01-01 s.d. 2030-12-31 dengan `generate_series`), isi `dim_wilayah` 8 baris.
 - Skrip kecil `python -m etl.run --mode init` yang menjalankan file SQL berurutan.
@@ -50,6 +54,8 @@ Total ±10,5 jam.
 
 ## Fase 2 — Extract (1,5 jam)
 
+Status: selesai. Januari 2024 terambil (173 fitur); retry terbukti saat USGS memutus koneksi sekali. Fixture berisi 1 fitur asli dan 2 salinan yang disunting.
+
 - `etl/extract.py`: `ambil_jendela(mulai, selesai)` dengan parameter tetap, retry, backoff, jeda 1 detik, User-Agent.
 - Simpan fitur mentah ke `stg_gempa_mentah` dengan `run_id`.
 - Simpan 3 fitur asli ke `tests/fixtures/usgs_contoh.json` (1 normal, 1 `quarry blast`, 1 tanpa magnitudo — kalau tidak ada, sunting salinannya).
@@ -61,6 +67,8 @@ Total ±10,5 jam.
 ---
 
 ## Fase 3 — Transform & kualitas (2 jam)
+
+Status: selesai. Semua 10 kasus wajib tercakup bersama kasus tambahan; `pytest` hijau.
 
 - `etl/transform.py`, `etl/quality.py`, `etl/wilayah.py` sesuai ARCHITECTURE § 7.
 - Test minimal 10 kasus:
@@ -81,6 +89,8 @@ Total ±10,5 jam.
 
 ## Fase 4 — Load & backfill (1,5 jam)
 
+Status: selesai di PostgreSQL lokal; angka dua kali run tercatat di README bagian "Idempoten".
+
 - `etl/load.py`: upsert sesuai ARCHITECTURE § 6.2, simpan penolakan, catat `etl_log`.
 - `etl/run.py --mode backfill --mulai 2016-01-01`.
 - Jalankan backfill **dua kali**.
@@ -96,6 +106,8 @@ Total ±10,5 jam.
 
 ## Fase 5 — View & dashboard (2,5 jam)
 
+Status: selesai lokal. Dashboard diuji headless dengan AppTest Streamlit (tanpa exception; state filter kosong dan reset berfungsi). Filter memakai view datar `v_gempa` (ADR 001). Pemeriksaan visual di browser dan screenshot belum.
+
 - `sql/003_view.sql`.
 - `dashboard/queries.py` (semua SQL di satu tempat, berparameter) dan `dashboard/app.py` sesuai DESIGN § 4.
 - `@st.cache_data(ttl=600)` untuk query.
@@ -107,6 +119,8 @@ Total ±10,5 jam.
 ---
 
 ## Fase 6 — Otomatisasi & rilis (1,5 jam)
+
+Status: workflow dan README siap. GitHub Secrets, run Actions pertama, Neon, dan deploy Streamlit menunggu otorisasi pemilik.
 
 - `.github/workflows/etl-harian.yml` + `DATABASE_URL` di GitHub Secrets; jalankan sekali lewat *Run workflow*.
 - Deploy dashboard ke Streamlit Community Cloud; `DATABASE_URL` di Secrets Streamlit.

@@ -1,0 +1,32 @@
+name: ETL harian
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # 01.00 UTC = 08.00 WIB
+  workflow_dispatch: {}
+
+concurrency:
+  group: etl-harian
+  cancel-in-progress: false
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Test
+        run: pytest -q
+      - name: Migrasi (aman diulang)
+        run: python -m etl.run --mode init
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: ETL inkremental 30 hari terakhir
+        run: python -m etl.run --mode inkremental
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
