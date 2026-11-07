@@ -1,10 +1,28 @@
 [theme]
 base = "light"
-primaryColor = "#1F6F78"
-backgroundColor = "#F7F6F2"
-secondaryBackgroundColor = "#EEECE6"
-textColor = "#1C2430"
-font = "sans serif"
+primaryColor = "#5E7A22"
+backgroundColor = "#FBFBF8"
+secondaryBackgroundColor = "#F1F3EA"
+textColor = "#1E2414"
+borderColor = "#E3E5DA"
+linkColor = "#4B6418"
+font = "Work Sans:https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
+headingFont = "Libre Baskerville:https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap"
+headingFontWeights = 400
+baseRadius = "0.75rem"
+buttonRadius = "full"
+showSidebarBorder = false
+
+[theme.sidebar]
+backgroundColor = "#34401A"
+secondaryBackgroundColor = "#46552A"
+textColor = "#EEF3DC"
+primaryColor = "#D3EE8C"
+borderColor = "#5A6A38"
+linkColor = "#D3EE8C"
+
+[client]
+toolbarMode = "viewer"
 
 [browser]
 gatherUsageStats = false

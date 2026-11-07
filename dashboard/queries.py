@@ -76,7 +76,7 @@ def ringkasan(f: Filter) -> pd.Series:
 @st.cache_data(ttl=600, show_spinner=False)
 def run_terakhir() -> pd.DataFrame:
     """Tidak terpengaruh filter (DESIGN § 2)."""
-    return _baca("SELECT run_id, mode, selesai, jumlah_insert, jumlah_update, jumlah_ditolak FROM v_run_terakhir")
+    return _baca("SELECT run_id, mode, selesai, jumlah_diambil, jumlah_insert, jumlah_update, jumlah_ditolak FROM v_run_terakhir")
 
 
 @st.cache_data(ttl=600, show_spinner=False)
@@ -133,4 +133,13 @@ def terkuat(f: Filter, batas: int = 10) -> pd.DataFrame:
         " wilayah, tempat, event_id"
         " FROM v_gempa" + _WHERE + " ORDER BY magnitudo DESC, waktu_utc DESC LIMIT %(batas)s",
         {**f.params(), "batas": batas},
+    )
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def per_tahun(f: Filter) -> pd.DataFrame:
+    """Untuk grafik batang mini di kartu total gempa."""
+    return _baca(
+        "SELECT tahun, COUNT(*) AS jumlah FROM v_gempa" + _WHERE + " GROUP BY tahun ORDER BY tahun",
+        f.params(),
     )

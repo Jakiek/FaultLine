@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from dashboard.format import angka, desimal, waktu_wib
+from dashboard.format import angka, desimal, jam_wib, tanggal_pendek_wib, waktu_wib
 
 
 def test_angka_pemisah_ribuan_titik():
@@ -17,3 +17,9 @@ def test_desimal_koma():
 def test_waktu_wib_tujuh_jam_di_depan_utc():
     # 20:30 UTC 31 Des = 03:30 WIB 1 Jan tahun berikutnya.
     assert waktu_wib(datetime(2023, 12, 31, 20, 30, tzinfo=UTC)) == "01-01-2024 03:30 WIB"
+
+
+def test_tanggal_dan_jam_pendek_wib():
+    t = datetime(2026, 12, 31, 18, 5, tzinfo=UTC)    # 01.05 WIB, 1 Jan 2027
+    assert tanggal_pendek_wib(t) == "1 Jan 2027"
+    assert jam_wib(t) == "01.05 WIB"
