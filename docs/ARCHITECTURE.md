@@ -66,12 +66,17 @@ faultline/
 │   └── run.py                   # CLI: --mode backfill|inkremental
 ├── dashboard/
 │   ├── app.py
-│   └── queries.py               # semua SQL dashboard di satu tempat
+│   ├── queries.py               # semua SQL dashboard di satu tempat
+│   └── format.py                # format angka/waktu Indonesia
 ├── tests/
 │   ├── fixtures/usgs_contoh.json
 │   ├── test_transform.py
 │   ├── test_quality.py
-│   └── test_wilayah.py
+│   ├── test_wilayah.py
+│   ├── test_extract.py          # retry/backoff tanpa jaringan
+│   ├── test_load.py             # integrasi PostgreSQL (TEST_DATABASE_URL)
+│   ├── test_run.py
+│   └── test_format.py
 ├── .streamlit/config.toml
 └── .github/workflows/etl-harian.yml
 ```
@@ -268,6 +273,8 @@ SELECT * FROM etl_log WHERE status = 'sukses' ORDER BY run_id DESC LIMIT 1;
 ```
 
 Dashboard tetap boleh menambahkan `WHERE` untuk filter (tanggal, magnitudo minimum, wilayah) — dengan parameter, bukan string concatenation.
+
+Karena view di atas sudah teragregasi, filter diterapkan pada view datar `v_gempa` (fakta + kedua dimensi) dan diagregasi di SQL oleh `dashboard/queries.py`. Lihat [ADR 001](decisions/001_view-datar-untuk-filter.md).
 
 ## 9. Penjadwalan — `.github/workflows/etl-harian.yml`
 
