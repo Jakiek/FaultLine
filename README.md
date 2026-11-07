@@ -2,6 +2,8 @@
 
 Pipeline data gempa Indonesia dari ujung ke ujung. Data diambil otomatis setiap hari dari katalog USGS, dibersihkan dengan aturan kualitas yang tercatat, lalu dimuat ke gudang data PostgreSQL berbentuk star schema. Hasilnya dianalisis di dashboard Streamlit.
 
+**Dashboard publik: [faultline-nd.streamlit.app](https://faultline-nd.streamlit.app/)**, tanpa login. Data diperbarui otomatis setiap hari pukul 08.00 WIB.
+
 > **Batasan penting.** Data berasal dari [USGS Earthquake Catalog](https://earthquake.usgs.gov/fdsnws/event/1/), **bukan BMKG**. Faultline adalah proyek analitik portofolio, **bukan sumber informasi darurat atau peringatan dini gempa**. Wilayah ditentukan dengan pendekatan kotak batas lintang/bujur, bukan batas provinsi resmi.
 
 ![Hero dashboard Faultline: panel ringkasan dan empat kartu angka](docs/screenshots/hero.png)
@@ -166,6 +168,12 @@ tests/       pytest + fixture fitur USGS asli
 docs/        brief, arsitektur, konvensi, desain, roadmap, ADR
 ```
 
-## Status
+## Deployment
 
-Pipeline, test, dan dashboard sudah berjalan lokal dengan data USGS asli. Database Neon, GitHub Secrets, run otomatis di GitHub Actions, dan deploy Streamlit Community Cloud belum dilakukan.
+| Komponen | Layanan |
+|---|---|
+| Gudang data | PostgreSQL di Neon (region Singapura) |
+| ETL terjadwal | GitHub Actions, `DATABASE_URL` di GitHub Secrets |
+| Dashboard | [Streamlit Community Cloud](https://faultline-nd.streamlit.app/), `DATABASE_URL` di Secrets Streamlit |
+
+Backfill awal ke Neon: 22.815 gempa dalam 2 menit 26 detik. Run pertama GitHub Actions (mode inkremental, 8 November 2026) lolos semua test di Python 3.11 dan memuat 125 gempa dengan 0 insert, 0 update, dan 0 ditolak, karena semuanya sudah ada dari backfill.

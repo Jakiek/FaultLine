@@ -29,7 +29,7 @@ Total ±10,5 jam.
 
 ## Fase 0 — Persiapan (30 menit)
 
-Status: venv, `requirements.txt` berversi tetap, `.env` diabaikan git, repo lokal. Neon dan repo GitHub publik belum dibuat; pengembangan memakai PostgreSQL lokal.
+Status: selesai. Repo publik `Jakiek/FaultLine`, database Neon (Singapura), `requirements.txt` berversi tetap, dan `.env` diabaikan git. Pengembangan lokal memakai PostgreSQL di `.pgdata/`.
 
 - Repo `faultline` (public), salin `PROJECTBRIEF.md`, `.gitignore`, `docs/`. **Pastikan `.gitignore` ada sebelum commit pertama.**
 - `python -m venv .venv`, `requirements.txt`: `requests`, `psycopg[binary]`, `python-dotenv`, `pandas`, `streamlit`, `plotly`, `pytest`.
@@ -41,7 +41,7 @@ Status: venv, `requirements.txt` berversi tetap, `.env` diabaikan git, repo loka
 
 ## Fase 1 — Skema (1 jam)
 
-Status: selesai di PostgreSQL lokal (`dim_tanggal` 5.479 baris, `dim_wilayah` 8 baris). Runner migrasi mencatat file di `skema_migrasi` sehingga `init` aman diulang. Belum dijalankan di Neon.
+Status: selesai di PostgreSQL lokal dan Neon (`dim_tanggal` 5.479 baris, `dim_wilayah` 8 baris). Runner migrasi mencatat file di `skema_migrasi` sehingga `init` aman diulang.
 
 - `sql/001_skema.sql`, `sql/002_dim_tanggal.sql` (generate 2016-01-01 s.d. 2030-12-31 dengan `generate_series`), isi `dim_wilayah` 8 baris.
 - Skrip kecil `python -m etl.run --mode init` yang menjalankan file SQL berurutan.
@@ -106,7 +106,7 @@ Status: selesai di PostgreSQL lokal; angka dua kali run tercatat di README bagia
 
 ## Fase 5 — View & dashboard (2,5 jam)
 
-Status: selesai lokal. Dashboard diuji headless dengan AppTest Streamlit (tanpa exception; state filter kosong dan reset berfungsi). Filter memakai view datar `v_gempa` (ADR 001). Pemeriksaan visual di browser dan screenshot belum.
+Status: selesai. Dashboard diuji dengan AppTest Streamlit dan diperiksa visual di desktop serta mobile. Filter memakai view datar `v_gempa` (ADR 001). Screenshot ada di `docs/screenshots/`.
 
 - `sql/003_view.sql`.
 - `dashboard/queries.py` (semua SQL di satu tempat, berparameter) dan `dashboard/app.py` sesuai DESIGN § 4.
@@ -120,7 +120,7 @@ Status: selesai lokal. Dashboard diuji headless dengan AppTest Streamlit (tanpa 
 
 ## Fase 6 — Otomatisasi & rilis (1,5 jam)
 
-Status: workflow dan README siap. GitHub Secrets, run Actions pertama, Neon, dan deploy Streamlit menunggu otorisasi pemilik.
+Status: selesai, kecuali satu kriteria. Run manual workflow pertama hijau (8 November 2026), dan dashboard publik di https://faultline-nd.streamlit.app/. Metrik "3 hari berturut-turut" baru bisa dinilai setelah tiga run terjadwal.
 
 - `.github/workflows/etl-harian.yml` + `DATABASE_URL` di GitHub Secrets; jalankan sekali lewat *Run workflow*.
 - Deploy dashboard ke Streamlit Community Cloud; `DATABASE_URL` di Secrets Streamlit.
