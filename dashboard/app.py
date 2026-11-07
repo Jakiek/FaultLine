@@ -215,7 +215,7 @@ def reset_filter() -> None:
 
 
 with st.sidebar:
-    st.header("Saring data")
+    st.header("Filter data")
     rentang = st.date_input(
         "Rentang tanggal (UTC)", key="rentang", min_value=awal_data, max_value=akhir_data, format="DD/MM/YYYY"
     )

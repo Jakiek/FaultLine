@@ -4,6 +4,14 @@ Pipeline data gempa Indonesia dari ujung ke ujung. Data diambil otomatis setiap 
 
 > **Batasan penting.** Data berasal dari [USGS Earthquake Catalog](https://earthquake.usgs.gov/fdsnws/event/1/), **bukan BMKG**. Faultline adalah proyek analitik portofolio, **bukan sumber informasi darurat atau peringatan dini gempa**. Wilayah ditentukan dengan pendekatan kotak batas lintang/bujur, bukan batas provinsi resmi.
 
+![Hero dashboard Faultline: panel ringkasan dan empat kartu angka](docs/screenshots/hero.png)
+
+| Peta dan distribusi magnitudo | Pipeline dan hasil run terakhir |
+|---|---|
+| ![Peta titik gempa dan histogram magnitudo](docs/screenshots/peta-magnitudo.png) | ![Tahap pipeline 01–04 dan panel run ETL terakhir](docs/screenshots/pipeline.png) |
+
+Tangkapan layar halaman penuh: [`docs/screenshots/dashboard.png`](docs/screenshots/dashboard.png). Data per 7 November 2026.
+
 ## Alur data
 
 ```mermaid
